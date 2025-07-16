@@ -1,0 +1,23 @@
+<h1>Commissions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Invoice</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @commissions.each do |commission| %>
+      <tr>
+        <td><%= commission.user.email %></td>
+        <td><%= link_to commission.invoice.id, commission.invoice %></td>
+        <td><%= commission.amount %></td>
+        <td><%= commission.created_at.to_date %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

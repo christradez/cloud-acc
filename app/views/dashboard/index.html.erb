@@ -1,0 +1,32 @@
+<h1>Dashboard</h1>
+
+<p>Welcome, <%= current_user.email %>!</p>
+
+<div class="widgets">
+  <div class="widget">
+    <h2>Total Sales</h2>
+    <p><%= @total_sales %></p>
+  </div>
+  <div class="widget">
+    <h2>Total Purchases</h2>
+    <p><%= @total_purchases %></p>
+  </div>
+</div>
+
+<h2>Low Stock Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @low_stock_items.each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td><%= item.quantity %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

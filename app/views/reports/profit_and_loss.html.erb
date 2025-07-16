@@ -1,0 +1,41 @@
+<h1>Profit and Loss</h1>
+
+<h2>Revenue</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @revenue_accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= -account.balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Expenses</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @expense_accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= account.balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+<h3>Net Profit/Loss: <%= -(@revenue_accounts.sum(&:balance) + @expense_accounts.sum(&:balance)) %></h3>

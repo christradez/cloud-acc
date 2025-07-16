@@ -1,0 +1,15 @@
+<div class="nested-fields">
+  <div class="field">
+    <%= f.label :account_id %><br>
+    <%= f.collection_select :account_id, current_user.tenant.accounts, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label :entry_type %><br>
+    <%= f.select :entry_type, options_for_select([['Debit', 'debit'], ['Credit', 'credit']]) %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount %>
+  </div>
+  <%= link_to_remove_association "Remove Item", f %>
+</div>

@@ -1,0 +1,36 @@
+<%= form_for(@journal_entry) do |f| %>
+  <% if @journal_entry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@journal_entry.errors.count, "error") %> prohibited this journal_entry from being saved:</h2>
+
+      <ul>
+      <% @journal_entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+
+  <h2>Journal Entry Items</h2>
+  <div id="journal_entry_items">
+    <%= f.fields_for :journal_entry_items do |builder| %>
+      <%= render 'journal_entry_item_fields', f: builder %>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association 'Add Item', f, :journal_entry_items %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

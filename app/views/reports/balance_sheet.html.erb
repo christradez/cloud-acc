@@ -1,0 +1,62 @@
+<h1>Balance Sheet</h1>
+
+<h2>Assets</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @asset_accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= account.balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Liabilities</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @liability_accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= -account.balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Equity</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @equity_accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= -account.balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+<h3>Total Assets: <%= @asset_accounts.sum(&:balance) %></h3>
+<h3>Total Liabilities: <%= -@liability_accounts.sum(&:balance) %></h3>
+<h3>Total Equity: <%= -@equity_accounts.sum(&:balance) %></h3>
+<h3>Total Liabilities + Equity: <%= -(@liability_accounts.sum(&:balance) + @equity_accounts.sum(&:balance)) %></h3>

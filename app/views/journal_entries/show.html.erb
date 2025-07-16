@@ -1,0 +1,33 @@
+<p>
+  <strong>Date:</strong>
+  <%= @journal_entry.date %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @journal_entry.description %>
+</p>
+
+<h2>Journal Entry Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Type</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @journal_entry.journal_entry_items.each do |journal_entry_item| %>
+      <tr>
+        <td><%= journal_entry_item.account.name %></td>
+        <td><%= journal_entry_item.entry_type %></td>
+        <td><%= journal_entry_item.amount %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<%= link_to 'Edit', edit_journal_entry_path(@journal_entry) %> |
+<%= link_to 'Back', journal_entries_path %>

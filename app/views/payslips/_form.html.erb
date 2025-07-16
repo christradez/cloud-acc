@@ -1,0 +1,33 @@
+<%= form_for([@employee, @payslip]) do |f| %>
+  <% if @payslip.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@payslip.errors.count, "error") %> prohibited this payslip from being saved:</h2>
+
+      <ul>
+      <% @payslip.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :gross_salary %><br>
+    <%= f.text_field :gross_salary %>
+  </div>
+  <div class="field">
+    <%= f.label :deductions %><br>
+    <%= f.text_field :deductions %>
+  </div>
+  <div class="field">
+    <%= f.label :net_salary %><br>
+    <%= f.text_field :net_salary %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

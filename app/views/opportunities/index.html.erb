@@ -1,0 +1,31 @@
+<h1>Opportunities for <%= @lead.name %></h1>
+
+<%= link_to 'New Opportunity', new_lead_opportunity_path(@lead) %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Stage</th>
+      <th>Amount</th>
+      <th>Close Date</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @opportunities.each do |opportunity| %>
+      <tr>
+        <td><%= opportunity.name %></td>
+        <td><%= opportunity.stage %></td>
+        <td><%= opportunity.amount %></td>
+        <td><%= opportunity.close_date %></td>
+        <td><%= link_to 'Show', [@lead, opportunity] %></td>
+        <td><%= link_to 'Edit', edit_lead_opportunity_path(@lead, opportunity) %></td>
+        <td><%= link_to 'Destroy', [@lead, opportunity], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back to Lead', @lead %>

@@ -1,0 +1,50 @@
+<p>
+  <strong>Supplier:</strong>
+  <%= @bill.supplier.name %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @bill.status %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @bill.date %>
+</p>
+
+<p>
+  <strong>Due date:</strong>
+  <%= @bill.due_date %>
+</p>
+
+<p>
+  <strong>Total:</strong>
+  <%= @bill.total %>
+</p>
+
+<h2>Bill Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Unit Price</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @bill.bill_items.each do |bill_item| %>
+      <tr>
+        <td><%= bill_item.item.name %></td>
+        <td><%= bill_item.quantity %></td>
+        <td><%= bill_item.unit_price %></td>
+        <td><%= bill_item.total %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<%= link_to 'Edit', edit_bill_path(@bill) %> |
+<%= link_to 'Back', bills_path %>

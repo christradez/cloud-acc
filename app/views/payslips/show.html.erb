@@ -1,0 +1,27 @@
+<p>
+  <strong>Employee:</strong>
+  <%= @payslip.employee.name %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @payslip.date %>
+</p>
+
+<p>
+  <strong>Gross salary:</strong>
+  <%= @payslip.gross_salary %>
+</p>
+
+<p>
+  <strong>Deductions:</strong>
+  <%= @payslip.deductions %>
+</p>
+
+<p>
+  <strong>Net salary:</strong>
+  <%= @payslip.net_salary %>
+</p>
+
+<%= link_to 'Edit', edit_employee_payslip_path(@payslip.employee, @payslip) %> |
+<%= link_to 'Back', employee_payslips_path(@payslip.employee) %>

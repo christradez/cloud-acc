@@ -1,0 +1,20 @@
+<h1>Trial Balance</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Debit</th>
+      <th>Credit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @accounts.each do |account| %>
+      <tr>
+        <td><%= account.name %></td>
+        <td><%= account.balance > 0 ? account.balance : '' %></td>
+        <td><%= account.balance < 0 ? -account.balance : '' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

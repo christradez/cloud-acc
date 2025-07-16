@@ -1,0 +1,27 @@
+<p>
+  <strong>Lead:</strong>
+  <%= @opportunity.lead.name %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @opportunity.name %>
+</p>
+
+<p>
+  <strong>Stage:</strong>
+  <%= @opportunity.stage %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @opportunity.amount %>
+</p>
+
+<p>
+  <strong>Close date:</strong>
+  <%= @opportunity.close_date %>
+</p>
+
+<%= link_to 'Edit', edit_lead_opportunity_path(@opportunity.lead, @opportunity) %> |
+<%= link_to 'Back', lead_opportunities_path(@opportunity.lead) %>

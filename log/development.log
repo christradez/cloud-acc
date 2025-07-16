@@ -1,0 +1,230 @@
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2025-07-16 16:22:32.902141', '2025-07-16 16:22:32.902146') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsersAndTenants (20231027120000)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "tenants" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "subdomain" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_135c8f54b2"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_users_on_tenant_id" ON "users" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027120000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddDetailsToTenants (20231027123000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "tenants" ADD "address" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "contact" varchar[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "logo" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027123000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddSettingsToTenants (20231027124500)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "tenants" ADD "timezone" varchar DEFAULT 'UTC'[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "currency" varchar DEFAULT 'USD'[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "language" varchar DEFAULT 'en'[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "multi_uom" boolean DEFAULT 0[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "payroll" boolean DEFAULT 1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "commissions" boolean DEFAULT 0[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "consignment" boolean DEFAULT 0[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "tenants" ADD "samples" boolean DEFAULT 0[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027124500') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateTaxCodes (20231027130000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "tax_codes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "rate" decimal(8,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_50fc89c443"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tax_codes_on_tenant_id" ON "tax_codes" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027130000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateCustomers (20231027131500)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "customers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_ed0724878c"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_tenant_id" ON "customers" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027131500') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateSuppliers (20231027133000)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "suppliers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tax_id" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3c38844929"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_suppliers_on_tenant_id" ON "suppliers" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027133000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateItems (20231027140000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_bc9494b0e7"
+FOREIGN KEY ("tax_code_id")
+  REFERENCES "tax_codes" ("id")
+, CONSTRAINT "fk_rails_3d54570303"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_items_on_tax_code_id" ON "items" ("tax_code_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_items_on_tenant_id" ON "items" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027140000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateInvoices (20231027143000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "invoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_0d349e632f"
+FOREIGN KEY ("customer_id")
+  REFERENCES "customers" ("id")
+, CONSTRAINT "fk_rails_79052e49f4"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_customer_id" ON "invoices" ("customer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_tenant_id" ON "invoices" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "invoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_25bf3d2c5e"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+, CONSTRAINT "fk_rails_99f31d79ba"
+FOREIGN KEY ("item_id")
+  REFERENCES "items" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_invoice_id" ON "invoice_items" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_item_id" ON "invoice_items" ("item_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027143000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateBills (20231027150000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "bills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_4d0f94d790"
+FOREIGN KEY ("supplier_id")
+  REFERENCES "suppliers" ("id")
+, CONSTRAINT "fk_rails_dedfe8fc01"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bills_on_supplier_id" ON "bills" ("supplier_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bills_on_tenant_id" ON "bills" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "bill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6de1f5051f"
+FOREIGN KEY ("bill_id")
+  REFERENCES "bills" ("id")
+, CONSTRAINT "fk_rails_90a3ce2dd4"
+FOREIGN KEY ("item_id")
+  REFERENCES "items" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_bill_id" ON "bill_items" ("bill_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_item_id" ON "bill_items" ("item_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027150000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateAccounts (20231027160000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "accounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "account_type" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_ec5cb9c3f9"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_accounts_on_tenant_id" ON "accounts" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027160000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateJournalEntries (20231027163000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "journal_entries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "date" date, "description" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_43665af2e1"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entries_on_tenant_id" ON "journal_entries" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "journal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_21d1a6f07c"
+FOREIGN KEY ("journal_entry_id")
+  REFERENCES "journal_entries" ("id")
+, CONSTRAINT "fk_rails_92682e5545"
+FOREIGN KEY ("account_id")
+  REFERENCES "accounts" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_journal_entry_id" ON "journal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_account_id" ON "journal_entry_items" ("account_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027163000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateEmployeesAndPayslips (20231027170000)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "employees" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_36b49e427a"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_employees_on_tenant_id" ON "employees" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "payslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_c0e66eeaff"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+, CONSTRAINT "fk_rails_285e2a46aa"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_employee_id" ON "payslips" ("employee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_tenant_id" ON "payslips" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027170000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateCommissions (20231027173000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "commissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_1cc89d251d"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_ad2f8747bb"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+, CONSTRAINT "fk_rails_2538adbad6"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_user_id" ON "commissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_invoice_id" ON "commissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_tenant_id" ON "commissions" ("tenant_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "customers" ADD "recruiter_id" integer[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_recruiter_id" ON "customers" ("recruiter_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acustomers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_recruiter_id" ON "acustomers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_tenant_id" ON "acustomers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acustomers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "customers"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "customers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "customers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer, CONSTRAINT "fk_rails_ed0724878c"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+, CONSTRAINT "fk_rails_132e69573f"
+FOREIGN KEY ("recruiter_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_tenant_id" ON "customers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_recruiter_id" ON "customers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "customers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "acustomers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "acustomers"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027173000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateCrmTables (20231027180000)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "leads" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "phone" varchar, "status" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_da2e88f6a7"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_leads_on_tenant_id" ON "leads" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "opportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6eedd6d9fe"
+FOREIGN KEY ("lead_id")
+  REFERENCES "leads" ("id")
+, CONSTRAINT "fk_rails_c3dd621e65"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_lead_id" ON "opportunities" ("lead_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_tenant_id" ON "opportunities" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "pipelines" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_fa982404e0"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_pipelines_on_tenant_id" ON "pipelines" ("tenant_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20231027180000') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

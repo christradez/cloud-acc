@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Multi-Tenant SaaS ERP</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <% if current_user %>
+            <li><%= link_to 'Dashboard', root_path %></li>
+            <li><%= link_to 'Companies', edit_company_path %></li>
+            <li><%= link_to 'Settings', edit_settings_path %></li>
+            <li><%= link_to 'Tax Codes', tax_codes_path %></li>
+            <li><%= link_to 'Customers', customers_path %></li>
+            <li><%= link_to 'Suppliers', suppliers_path %></li>
+            <li><%= link_to 'Items', items_path %></li>
+            <li><%= link_to 'Invoices', invoices_path %></li>
+            <li><%= link_to 'Bills', bills_path %></li>
+            <li><%= link_to 'Accounts', accounts_path %></li>
+            <li><%= link_to 'Journal Entries', journal_entries_path %></li>
+            <% if current_user.tenant.payroll %>
+              <li><%= link_to 'Employees', employees_path %></li>
+            <% end %>
+            <% if current_user.tenant.commissions %>
+              <li><%= link_to 'Commissions', commissions_path %></li>
+            <% end %>
+            <li><%= link_to 'Leads', leads_path %></li>
+            <li><%= link_to 'Pipelines', pipelines_path %></li>
+            <li><%= link_to 'Reports', reports_path %></li>
+            <li><%= link_to 'Log Out', logout_path %></li>
+          <% else %>
+            <li><%= link_to 'Home', root_path %></li>
+            <li><%= link_to 'Features', features_path %></li>
+            <li><%= link_to 'Pricing', pricing_path %></li>
+            <li><%= link_to 'Sign Up', signup_path %></li>
+            <li><%= link_to 'Log In', login_path %></li>
+          <% end %>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
+  </body>
+</html>

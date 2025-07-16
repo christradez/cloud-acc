@@ -1,0 +1,24 @@
+<h1>Tax Codes</h1>
+
+<%= link_to 'New Tax Code', new_tax_code_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Rate</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tax_codes.each do |tax_code| %>
+      <tr>
+        <td><%= tax_code.name %></td>
+        <td><%= tax_code.rate %></td>
+        <td><%= link_to 'Edit', edit_tax_code_path(tax_code) %></td>
+        <td><%= link_to 'Destroy', tax_code, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

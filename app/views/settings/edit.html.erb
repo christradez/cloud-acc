@@ -1,0 +1,48 @@
+<h1>Settings</h1>
+
+<%= form_for @settings, url: settings_path do |f| %>
+  <% if @settings.errors.any? %>
+    <div class="error_messages">
+      <h2>Form is invalid</h2>
+      <ul>
+        <% @settings.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :timezone %><br />
+    <%= f.text_field :timezone %>
+  </div>
+  <div class="field">
+    <%= f.label :currency %><br />
+    <%= f.text_field :currency %>
+  </div>
+  <div class="field">
+    <%= f.label :language %><br />
+    <%= f.text_field :language %>
+  </div>
+  <div class="field">
+    <%= f.label :multi_uom %><br />
+    <%= f.check_box :multi_uom %>
+  </div>
+  <div class="field">
+    <%= f.label :payroll %><br />
+    <%= f.check_box :payroll %>
+  </div>
+  <div class="field">
+    <%= f.label :commissions %><br />
+    <%= f.check_box :commissions %>
+  </div>
+  <div class="field">
+    <%= f.label :consignment %><br />
+    <%= f.check_box :consignment %>
+  </div>
+  <div class="field">
+    <%= f.label :samples %><br />
+    <%= f.check_box :samples %>
+  </div>
+  <div class="actions"><%= f.submit "Update Settings" %></div>
+<% end %>
