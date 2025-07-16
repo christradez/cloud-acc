@@ -1,0 +1,9 @@
+one:
+  email: MyString
+  password_digest: MyString
+  tenant: one
+
+two:
+  email: MyString
+  password_digest: MyString
+  tenant: two

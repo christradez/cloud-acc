@@ -1,0 +1,943 @@
+  [1m[35m (2.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "accounts"[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE TABLE "accounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "account_type" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_accounts_on_tenant_id" ON "accounts" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "bill_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "bill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_bill_id" ON "bill_items" ("bill_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_item_id" ON "bill_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "bills"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "bills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_bills_on_supplier_id" ON "bills" ("supplier_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_bills_on_tenant_id" ON "bills" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "commissions"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "commissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_invoice_id" ON "commissions" ("invoice_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_tenant_id" ON "commissions" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_user_id" ON "commissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "customers"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "customers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_customers_on_recruiter_id" ON "customers" ("recruiter_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_customers_on_tenant_id" ON "customers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "employees"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "employees" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE INDEX "index_employees_on_tenant_id" ON "employees" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "invoice_items"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "invoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_invoice_id" ON "invoice_items" ("invoice_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_item_id" ON "invoice_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "invoices"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "invoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_customer_id" ON "invoices" ("customer_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_tenant_id" ON "invoices" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "items"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_items_on_tax_code_id" ON "items" ("tax_code_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_items_on_tenant_id" ON "items" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "journal_entries"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "journal_entries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "date" date, "description" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_journal_entries_on_tenant_id" ON "journal_entries" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "journal_entry_items"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "journal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_account_id" ON "journal_entry_items" ("account_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_journal_entry_id" ON "journal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "leads"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "leads" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "phone" varchar, "status" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_leads_on_tenant_id" ON "leads" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "opportunities"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "opportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_lead_id" ON "opportunities" ("lead_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_tenant_id" ON "opportunities" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "payslips"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "payslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_employee_id" ON "payslips" ("employee_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_tenant_id" ON "payslips" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "pipelines"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "pipelines" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE INDEX "index_pipelines_on_tenant_id" ON "pipelines" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "suppliers"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "suppliers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tax_id" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_suppliers_on_tenant_id" ON "suppliers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "tax_codes"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "tax_codes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "rate" decimal(8,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_tax_codes_on_tenant_id" ON "tax_codes" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "tenants"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "tenants" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "subdomain" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "address" varchar, "contact" varchar, "logo" varchar, "timezone" varchar DEFAULT 'UTC', "currency" varchar DEFAULT 'USD', "language" varchar DEFAULT 'en', "multi_uom" boolean DEFAULT 0, "payroll" boolean DEFAULT 1, "commissions" boolean DEFAULT 0, "consignment" boolean DEFAULT 0, "samples" boolean DEFAULT 0)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_users_on_tenant_id" ON "users" ("tenant_id")[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aaccounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "account_type" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aaccounts_on_tenant_id" ON "aaccounts" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "aaccounts" ("id","name","account_type","tenant_id","created_at","updated_at")
+                     SELECT "id","name","account_type","tenant_id","created_at","updated_at" FROM "accounts"[0m
+  [1m[35m (1.9ms)[0m  [1m[35mDROP TABLE "accounts"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "accounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "account_type" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_ec5cb9c3f9"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_accounts_on_tenant_id" ON "accounts" ("tenant_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[32mINSERT INTO "accounts" ("id","name","account_type","tenant_id","created_at","updated_at")
+                     SELECT "id","name","account_type","tenant_id","created_at","updated_at" FROM "aaccounts"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aaccounts"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "abill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abill_items_on_item_id" ON "abill_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abill_items_on_bill_id" ON "abill_items" ("bill_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "abill_items" ("id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "bill_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "bill_items"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "bill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6de1f5051f"
+FOREIGN KEY ("bill_id")
+  REFERENCES "bills" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_bill_id" ON "bill_items" ("bill_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_item_id" ON "bill_items" ("item_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "bill_items" ("id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "abill_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "abill_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "abill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abill_items_on_item_id" ON "abill_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abill_items_on_bill_id" ON "abill_items" ("bill_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "abill_items" ("id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "bill_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "bill_items"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "bill_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "bill_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6de1f5051f"
+FOREIGN KEY ("bill_id")
+  REFERENCES "bills" ("id")
+, CONSTRAINT "fk_rails_90a3ce2dd4"
+FOREIGN KEY ("item_id")
+  REFERENCES "items" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_bill_id" ON "bill_items" ("bill_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_bill_items_on_item_id" ON "bill_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "bill_items" ("id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","bill_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "abill_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "abill_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "abills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_abills_on_tenant_id" ON "abills" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abills_on_supplier_id" ON "abills" ("supplier_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "abills" ("id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "bills"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "bills"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "bills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_4d0f94d790"
+FOREIGN KEY ("supplier_id")
+  REFERENCES "suppliers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_bills_on_supplier_id" ON "bills" ("supplier_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_bills_on_tenant_id" ON "bills" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "bills" ("id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "abills"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mDROP TABLE "abills"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "abills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_abills_on_tenant_id" ON "abills" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_abills_on_supplier_id" ON "abills" ("supplier_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "abills" ("id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "bills"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "bills"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "bills" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "supplier_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_4d0f94d790"
+FOREIGN KEY ("supplier_id")
+  REFERENCES "suppliers" ("id")
+, CONSTRAINT "fk_rails_dedfe8fc01"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bills_on_supplier_id" ON "bills" ("supplier_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_bills_on_tenant_id" ON "bills" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "bills" ("id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","supplier_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "abills"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "abills"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acommissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_user_id" ON "acommissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_tenant_id" ON "acommissions" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_invoice_id" ON "acommissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acommissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "commissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "commissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "commissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_ad2f8747bb"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_invoice_id" ON "commissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_tenant_id" ON "commissions" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_user_id" ON "commissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "commissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "acommissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "acommissions"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acommissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_user_id" ON "acommissions" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_tenant_id" ON "acommissions" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_invoice_id" ON "acommissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acommissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "commissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "commissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "commissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_ad2f8747bb"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+, CONSTRAINT "fk_rails_2538adbad6"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_invoice_id" ON "commissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_tenant_id" ON "commissions" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_user_id" ON "commissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "commissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "acommissions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "acommissions"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acommissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_user_id" ON "acommissions" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_tenant_id" ON "acommissions" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acommissions_on_invoice_id" ON "acommissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acommissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "commissions"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "commissions"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "commissions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "invoice_id" integer NOT NULL, "amount" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_2538adbad6"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+, CONSTRAINT "fk_rails_ad2f8747bb"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+, CONSTRAINT "fk_rails_1cc89d251d"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_invoice_id" ON "commissions" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_tenant_id" ON "commissions" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_commissions_on_user_id" ON "commissions" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "commissions" ("id","user_id","invoice_id","amount","tenant_id","created_at","updated_at")
+                     SELECT "id","user_id","invoice_id","amount","tenant_id","created_at","updated_at" FROM "acommissions"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "acommissions"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acustomers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_tenant_id" ON "acustomers" ("tenant_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_recruiter_id" ON "acustomers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acustomers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "customers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "customers"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "customers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer, CONSTRAINT "fk_rails_ed0724878c"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_recruiter_id" ON "customers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_tenant_id" ON "customers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "customers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "acustomers"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "acustomers"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "acustomers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_tenant_id" ON "acustomers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_acustomers_on_recruiter_id" ON "acustomers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "acustomers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "customers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "customers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "customers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "customer_type" varchar, "tax_id" varchar, "payment_terms" varchar, "currency" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "recruiter_id" integer, CONSTRAINT "fk_rails_ed0724878c"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+, CONSTRAINT "fk_rails_132e69573f"
+FOREIGN KEY ("recruiter_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_recruiter_id" ON "customers" ("recruiter_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_customers_on_tenant_id" ON "customers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "customers" ("id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id")
+                     SELECT "id","name","customer_type","tax_id","payment_terms","currency","tenant_id","created_at","updated_at","recruiter_id" FROM "acustomers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "acustomers"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aemployees" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aemployees_on_tenant_id" ON "aemployees" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aemployees" ("id","name","email","salary","tenant_id","created_at","updated_at")
+                     SELECT "id","name","email","salary","tenant_id","created_at","updated_at" FROM "employees"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "employees"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "employees" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_36b49e427a"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_employees_on_tenant_id" ON "employees" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "employees" ("id","name","email","salary","tenant_id","created_at","updated_at")
+                     SELECT "id","name","email","salary","tenant_id","created_at","updated_at" FROM "aemployees"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "aemployees"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ainvoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoice_items_on_item_id" ON "ainvoice_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoice_items_on_invoice_id" ON "ainvoice_items" ("invoice_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "ainvoice_items" ("id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "invoice_items"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE "invoice_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "invoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_25bf3d2c5e"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_invoice_id" ON "invoice_items" ("invoice_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_item_id" ON "invoice_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "invoice_items" ("id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "ainvoice_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ainvoice_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ainvoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoice_items_on_item_id" ON "ainvoice_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoice_items_on_invoice_id" ON "ainvoice_items" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ainvoice_items" ("id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "invoice_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "invoice_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "invoice_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "invoice_id" integer NOT NULL, "item_id" integer NOT NULL, "quantity" integer, "unit_price" decimal(10,2), "total" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_25bf3d2c5e"
+FOREIGN KEY ("invoice_id")
+  REFERENCES "invoices" ("id")
+, CONSTRAINT "fk_rails_99f31d79ba"
+FOREIGN KEY ("item_id")
+  REFERENCES "items" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_invoice_id" ON "invoice_items" ("invoice_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoice_items_on_item_id" ON "invoice_items" ("item_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "invoice_items" ("id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at")
+                     SELECT "id","invoice_id","item_id","quantity","unit_price","total","created_at","updated_at" FROM "ainvoice_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ainvoice_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ainvoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoices_on_tenant_id" ON "ainvoices" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoices_on_customer_id" ON "ainvoices" ("customer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ainvoices" ("id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "invoices"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "invoices"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "invoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_0d349e632f"
+FOREIGN KEY ("customer_id")
+  REFERENCES "customers" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_customer_id" ON "invoices" ("customer_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_tenant_id" ON "invoices" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "invoices" ("id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "ainvoices"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ainvoices"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ainvoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoices_on_tenant_id" ON "ainvoices" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_ainvoices_on_customer_id" ON "ainvoices" ("customer_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "ainvoices" ("id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "invoices"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "invoices"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "invoices" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customer_id" integer NOT NULL, "status" varchar, "date" date, "due_date" date, "total" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_0d349e632f"
+FOREIGN KEY ("customer_id")
+  REFERENCES "customers" ("id")
+, CONSTRAINT "fk_rails_79052e49f4"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_customer_id" ON "invoices" ("customer_id")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE INDEX "index_invoices_on_tenant_id" ON "invoices" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "invoices" ("id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at")
+                     SELECT "id","customer_id","status","date","due_date","total","tenant_id","created_at","updated_at" FROM "ainvoices"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "ainvoices"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aitems" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aitems_on_tenant_id" ON "aitems" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aitems_on_tax_code_id" ON "aitems" ("tax_code_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aitems" ("id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at")
+                     SELECT "id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at" FROM "items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_bc9494b0e7"
+FOREIGN KEY ("tax_code_id")
+  REFERENCES "tax_codes" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_items_on_tax_code_id" ON "items" ("tax_code_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_items_on_tenant_id" ON "items" ("tenant_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "items" ("id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at")
+                     SELECT "id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at" FROM "aitems"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aitems"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aitems" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aitems_on_tenant_id" ON "aitems" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aitems_on_tax_code_id" ON "aitems" ("tax_code_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "aitems" ("id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at")
+                     SELECT "id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at" FROM "items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "sku" varchar, "category" varchar, "brand" varchar, "tax_code_id" integer NOT NULL, "base_uom" varchar, "quantity" integer DEFAULT 0, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_bc9494b0e7"
+FOREIGN KEY ("tax_code_id")
+  REFERENCES "tax_codes" ("id")
+, CONSTRAINT "fk_rails_3d54570303"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_items_on_tax_code_id" ON "items" ("tax_code_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_items_on_tenant_id" ON "items" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "items" ("id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at")
+                     SELECT "id","name","sku","category","brand","tax_code_id","base_uom","quantity","tenant_id","created_at","updated_at" FROM "aitems"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aitems"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ajournal_entries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "date" date, "description" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_ajournal_entries_on_tenant_id" ON "ajournal_entries" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ajournal_entries" ("id","date","description","tenant_id","created_at","updated_at")
+                     SELECT "id","date","description","tenant_id","created_at","updated_at" FROM "journal_entries"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "journal_entries"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "journal_entries" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "date" date, "description" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_43665af2e1"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_journal_entries_on_tenant_id" ON "journal_entries" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "journal_entries" ("id","date","description","tenant_id","created_at","updated_at")
+                     SELECT "id","date","description","tenant_id","created_at","updated_at" FROM "ajournal_entries"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "ajournal_entries"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ajournal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_ajournal_entry_items_on_journal_entry_id" ON "ajournal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_ajournal_entry_items_on_account_id" ON "ajournal_entry_items" ("account_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ajournal_entry_items" ("id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at")
+                     SELECT "id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at" FROM "journal_entry_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "journal_entry_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "journal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_92682e5545"
+FOREIGN KEY ("account_id")
+  REFERENCES "accounts" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_account_id" ON "journal_entry_items" ("account_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_journal_entry_id" ON "journal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "journal_entry_items" ("id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at")
+                     SELECT "id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at" FROM "ajournal_entry_items"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ajournal_entry_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ajournal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ajournal_entry_items_on_journal_entry_id" ON "ajournal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ajournal_entry_items_on_account_id" ON "ajournal_entry_items" ("account_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ajournal_entry_items" ("id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at")
+                     SELECT "id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at" FROM "journal_entry_items"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "journal_entry_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "journal_entry_items" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "journal_entry_id" integer NOT NULL, "account_id" integer NOT NULL, "entry_type" varchar, "amount" decimal(10,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_92682e5545"
+FOREIGN KEY ("account_id")
+  REFERENCES "accounts" ("id")
+, CONSTRAINT "fk_rails_21d1a6f07c"
+FOREIGN KEY ("journal_entry_id")
+  REFERENCES "journal_entries" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_account_id" ON "journal_entry_items" ("account_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_journal_entry_items_on_journal_entry_id" ON "journal_entry_items" ("journal_entry_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "journal_entry_items" ("id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at")
+                     SELECT "id","journal_entry_id","account_id","entry_type","amount","created_at","updated_at" FROM "ajournal_entry_items"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "ajournal_entry_items"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aleads" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "phone" varchar, "status" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aleads_on_tenant_id" ON "aleads" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aleads" ("id","name","email","phone","status","tenant_id","created_at","updated_at")
+                     SELECT "id","name","email","phone","status","tenant_id","created_at","updated_at" FROM "leads"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "leads"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "leads" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "phone" varchar, "status" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_da2e88f6a7"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_leads_on_tenant_id" ON "leads" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "leads" ("id","name","email","phone","status","tenant_id","created_at","updated_at")
+                     SELECT "id","name","email","phone","status","tenant_id","created_at","updated_at" FROM "aleads"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aleads"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aopportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aopportunities_on_tenant_id" ON "aopportunities" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_aopportunities_on_lead_id" ON "aopportunities" ("lead_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aopportunities" ("id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at")
+                     SELECT "id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at" FROM "opportunities"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "opportunities"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "opportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6eedd6d9fe"
+FOREIGN KEY ("lead_id")
+  REFERENCES "leads" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_lead_id" ON "opportunities" ("lead_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_tenant_id" ON "opportunities" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "opportunities" ("id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at")
+                     SELECT "id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at" FROM "aopportunities"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aopportunities"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aopportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aopportunities_on_tenant_id" ON "aopportunities" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aopportunities_on_lead_id" ON "aopportunities" ("lead_id")[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "aopportunities" ("id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at")
+                     SELECT "id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at" FROM "opportunities"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "opportunities"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "opportunities" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "lead_id" integer NOT NULL, "stage" varchar, "amount" decimal(10,2), "close_date" date, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_6eedd6d9fe"
+FOREIGN KEY ("lead_id")
+  REFERENCES "leads" ("id")
+, CONSTRAINT "fk_rails_c3dd621e65"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_lead_id" ON "opportunities" ("lead_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_opportunities_on_tenant_id" ON "opportunities" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "opportunities" ("id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at")
+                     SELECT "id","name","lead_id","stage","amount","close_date","tenant_id","created_at","updated_at" FROM "aopportunities"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "aopportunities"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "apayslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_apayslips_on_tenant_id" ON "apayslips" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_apayslips_on_employee_id" ON "apayslips" ("employee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "apayslips" ("id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at")
+                     SELECT "id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at" FROM "payslips"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "payslips"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "payslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_c0e66eeaff"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_employee_id" ON "payslips" ("employee_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_tenant_id" ON "payslips" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "payslips" ("id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at")
+                     SELECT "id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at" FROM "apayslips"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "apayslips"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "apayslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_apayslips_on_tenant_id" ON "apayslips" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_apayslips_on_employee_id" ON "apayslips" ("employee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "apayslips" ("id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at")
+                     SELECT "id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at" FROM "payslips"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "payslips"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "payslips" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "employee_id" integer NOT NULL, "date" date, "gross_salary" decimal(10,2), "deductions" decimal(10,2), "net_salary" decimal(10,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_c0e66eeaff"
+FOREIGN KEY ("employee_id")
+  REFERENCES "employees" ("id")
+, CONSTRAINT "fk_rails_285e2a46aa"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_employee_id" ON "payslips" ("employee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_payslips_on_tenant_id" ON "payslips" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "payslips" ("id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at")
+                     SELECT "id","employee_id","date","gross_salary","deductions","net_salary","tenant_id","created_at","updated_at" FROM "apayslips"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "apayslips"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "apipelines" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_apipelines_on_tenant_id" ON "apipelines" ("tenant_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "apipelines" ("id","name","tenant_id","created_at","updated_at")
+                     SELECT "id","name","tenant_id","created_at","updated_at" FROM "pipelines"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "pipelines"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "pipelines" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_fa982404e0"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_pipelines_on_tenant_id" ON "pipelines" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "pipelines" ("id","name","tenant_id","created_at","updated_at")
+                     SELECT "id","name","tenant_id","created_at","updated_at" FROM "apipelines"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "apipelines"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asuppliers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tax_id" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asuppliers_on_tenant_id" ON "asuppliers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asuppliers" ("id","name","tax_id","tenant_id","created_at","updated_at")
+                     SELECT "id","name","tax_id","tenant_id","created_at","updated_at" FROM "suppliers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "suppliers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "suppliers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "tax_id" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_3c38844929"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_suppliers_on_tenant_id" ON "suppliers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "suppliers" ("id","name","tax_id","tenant_id","created_at","updated_at")
+                     SELECT "id","name","tax_id","tenant_id","created_at","updated_at" FROM "asuppliers"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asuppliers"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "atax_codes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "rate" decimal(8,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_atax_codes_on_tenant_id" ON "atax_codes" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "atax_codes" ("id","name","rate","tenant_id","created_at","updated_at")
+                     SELECT "id","name","rate","tenant_id","created_at","updated_at" FROM "tax_codes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "tax_codes"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "tax_codes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "rate" decimal(8,2), "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_50fc89c443"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tax_codes_on_tenant_id" ON "tax_codes" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "tax_codes" ("id","name","rate","tenant_id","created_at","updated_at")
+                     SELECT "id","name","rate","tenant_id","created_at","updated_at" FROM "atax_codes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "atax_codes"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ausers" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ausers_on_tenant_id" ON "ausers" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "ausers" ("id","email","password_digest","tenant_id","created_at","updated_at")
+                     SELECT "id","email","password_digest","tenant_id","created_at","updated_at" FROM "users"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "users"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "tenant_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_135c8f54b2"
+FOREIGN KEY ("tenant_id")
+  REFERENCES "tenants" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_users_on_tenant_id" ON "users" ("tenant_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "users" ("id","email","password_digest","tenant_id","created_at","updated_at")
+                     SELECT "id","email","password_digest","tenant_id","created_at","updated_at" FROM "ausers"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ausers"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20231027180000)[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20231027173000),
+(20231027170000),
+(20231027163000),
+(20231027160000),
+(20231027150000),
+(20231027143000),
+(20231027140000),
+(20231027133000),
+(20231027131500),
+(20231027130000),
+(20231027124500),
+(20231027123000),
+(20231027120000);[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2025-07-16 17:51:26.460393', '2025-07-16 17:51:26.460401') RETURNING "key"[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', 'a14c1d396ff818b4f7d763cb2f00299b487ab9c4', '2025-07-16 17:51:26.462223', '2025-07-16 17:51:26.462226') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "tenants";
+DELETE FROM "users";
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2025-07-16 17:56:33.690493', '2025-07-16 17:56:33.690493');
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', '2025-07-16 17:56:33.690493', '2025-07-16 17:56:33.690493');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 980190962, '2025-07-16 17:56:33.694158', '2025-07-16 17:56:33.694158');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', 298486374, '2025-07-16 17:56:33.694158', '2025-07-16 17:56:33.694158')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.7ms)[0m  [1m[31mDELETE FROM "tenants";
+DELETE FROM "users";
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2025-07-16 17:58:14.215566', '2025-07-16 17:58:14.215566');
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', '2025-07-16 17:58:14.215566', '2025-07-16 17:58:14.215566');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 980190962, '2025-07-16 17:58:14.220793', '2025-07-16 17:58:14.220793');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', 298486374, '2025-07-16 17:58:14.220793', '2025-07-16 17:58:14.220793')[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (5.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------
+UserTest: test_email_should_be_unique_per_tenant
+------------------------------------------------
+  [1m[36mTenant Load (0.3ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Create (0.6ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "test@example.com"], ["password_digest", "$2a$04$.sWjnaijZdqwhepuzMa87uaGeFaJ7h8PTYajxpguC2gmJECm/jDqO"], ["tenant_id", 980190962], ["created_at", "2025-07-16 17:58:14.310414"], ["updated_at", "2025-07-16 17:58:14.310414"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTenant Load (0.2ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------
+UserTest: test_password_should_be_present_(nonblank)
+----------------------------------------------------
+  [1m[36mTenant Load (0.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------
+UserTest: test_password_should_have_a_minimum_length
+----------------------------------------------------
+  [1m[36mTenant Load (0.2ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------
+UserTest: test_should_be_valid
+------------------------------
+  [1m[36mTenant Load (0.3ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------
+UserTest: test_should_have_a_tenant
+-----------------------------------
+  [1m[36mTenant Load (0.3ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" IS NULL LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------
+UserTest: test_email_should_be_present
+--------------------------------------
+  [1m[36mTenant Load (0.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "     "], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.6ms)[0m  [1m[31mDELETE FROM "tenants";
+DELETE FROM "users";
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', '2025-07-16 18:00:03.249038', '2025-07-16 18:00:03.249038');
+INSERT INTO "tenants" ("id", "name", "subdomain", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', '2025-07-16 18:00:03.249038', '2025-07-16 18:00:03.249038');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (980190962, 'MyString', 'MyString', 980190962, '2025-07-16 18:00:03.267665', '2025-07-16 18:00:03.267665');
+INSERT INTO "users" ("id", "email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (298486374, 'MyString', 'MyString', 298486374, '2025-07-16 18:00:03.267665', '2025-07-16 18:00:03.267665')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------
+UserTest: test_email_should_be_unique_per_tenant
+------------------------------------------------
+  [1m[36mTenant Load (0.3ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Create (1.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "tenant_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "test@example.com"], ["password_digest", "$2a$04$LHLXdoIlSJYXjHfMcxwsQuN6LZMKMevJeu3x4dv9gMoyxLoN5FT96"], ["tenant_id", 980190962], ["created_at", "2025-07-16 18:00:03.349764"], ["updated_at", "2025-07-16 18:00:03.349764"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTenant Load (0.3ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+------------------------------
+UserTest: test_should_be_valid
+------------------------------
+  [1m[36mTenant Load (0.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------
+UserTest: test_password_should_be_present_(nonblank)
+----------------------------------------------------
+  [1m[36mTenant Load (0.2ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------
+UserTest: test_email_should_be_present
+--------------------------------------
+  [1m[36mTenant Load (1.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "     "], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------
+UserTest: test_password_should_have_a_minimum_length
+----------------------------------------------------
+  [1m[36mTenant Load (0.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" = ? LIMIT ?[0m  [["email", "test@example.com"], ["tenant_id", 980190962], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------
+UserTest: test_should_have_a_tenant
+-----------------------------------
+  [1m[36mTenant Load (0.1ms)[0m  [1m[34mSELECT "tenants".* FROM "tenants" WHERE "tenants"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = ? AND "users"."tenant_id" IS NULL LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
