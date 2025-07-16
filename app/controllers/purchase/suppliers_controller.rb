@@ -1,4 +1,4 @@
-class SuppliersController < ApplicationController
+class Purchase::SuppliersController < ApplicationController
   before_action :authorize
   before_action :set_supplier, only: [:show, :edit, :update, :destroy]
 

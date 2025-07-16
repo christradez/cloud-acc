@@ -1,4 +1,4 @@
-class CustomersController < ApplicationController
+class Sales::CustomersController < ApplicationController
   before_action :authorize
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
 

@@ -1,6 +1,6 @@
 <h1>Customers</h1>
 
-<%= link_to 'New Customer', new_customer_path %>
+<%= link_to 'New Customer', new_sales_customer_path %>
 
 <table>
   <thead>
@@ -22,9 +22,9 @@
         <td><%= customer.tax_id %></td>
         <td><%= customer.payment_terms %></td>
         <td><%= customer.currency %></td>
-        <td><%= link_to 'Show', customer %></td>
-        <td><%= link_to 'Edit', edit_customer_path(customer) %></td>
-        <td><%= link_to 'Destroy', customer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', sales_customer_path(customer) %></td>
+        <td><%= link_to 'Edit', edit_sales_customer_path(customer) %></td>
+        <td><%= link_to 'Destroy', sales_customer_path(customer), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

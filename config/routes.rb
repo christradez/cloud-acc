@@ -11,8 +11,12 @@ Rails.application.routes.draw do
   resource :company, only: [:edit, :update]
   resource :settings, only: [:edit, :update]
   resources :tax_codes
-  resources :customers
-  resources :suppliers
+  scope module: :sales do
+    resources :customers
+  end
+  scope module: :purchase do
+    resources :suppliers
+  end
   resources :items
   resources :invoices
   resources :bills
